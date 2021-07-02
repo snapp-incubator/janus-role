@@ -1,6 +1,6 @@
 # Janus Role
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1995parham/ansible-role/install?label=install&logo=github&style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1995parham/janus-role/install?label=install&logo=github&style=flat-square)
 
 ## Introduction
 
