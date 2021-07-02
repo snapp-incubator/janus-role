@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: Parham ALvani
+  description: install janus media server
+  company: Snapp!
+
+  issue_tracker_url: https://github.com/1995parham/janus-role/issues
+
+  license: GPL-3.0-or-later
+
+  min_ansible_version: 2.11
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+
+  galaxy_tags: []
+
+dependencies: []
