@@ -25,26 +25,32 @@
   git:
     repo: https://github.com/meetecho/janus-gateway
     dest: "{{ janus_home }}"
-    update: true
+    update: false
     version: "{{ janus_version }}"
 - name: autogen
   become: false
   command: ./autogen.sh
   args:
     chdir: "{{ janus_home }}"
+    creates: m4
+- name: configure
+  become: false
+  command: ./configure --prefix=/opt/janus
+  args:
+    creates: Makefile
+    chdir: "{{ janus_home }}"
 - name: build
   become: false
-  command: |
-    ./configure --prefix=/opt/janus
-    make
+  command: make
   args:
     chdir: "{{ janus_home }}"
+    creates: janus
 - name: janus directory
   become: true
   file:
     path: /opt/janus
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ lookup('env', 'USER') }}"
+    group: "{{ lookup('env', 'USER') }}"
     mode: 0755
     state: directory
 - name: install
@@ -52,10 +58,11 @@
   command: make install
   args:
     chdir: "{{ janus_home }}"
+    creates: /opt/janus/bin/janus
 
 - name: configuration
   template:
-    src: "{{ item }}"
+    src: "{{ item }}.j2"
     dest: "/opt/janus/etc/janus/{{ item }}"
   loop:
     - janus.eventhandler.gelfevh.jcfg
