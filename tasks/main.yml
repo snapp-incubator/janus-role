@@ -29,35 +29,47 @@
     version: "{{ janus_version }}"
 - name: autogen
   become: false
-  shell:
+  command: ./autogen.sh
+  args:
     chdir: "{{ janus_home }}"
-    cmd: ./autogen.sh
 - name: build
   become: false
-  shell:
+  command: |
+    ./configure --prefix=/opt/janus
+    make
+  args:
     chdir: "{{ janus_home }}"
-    cmd: |
-      ./configure --prefix=/opt/janus
-      make
 - name: janus directory
   become: true
   file:
     path: /opt/janus
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: 0755
     state: directory
 - name: install
   become: false
-  shell:
+  command: make install
+  args:
     chdir: "{{ janus_home }}"
-    cmd: make install
-- name: check configuration
-  stat:
-    path: /opt/janus/etc/janus
-  register: config_dir_check
-- name: initiate configuration
-  shell:
-    chdir: "{{ janus_home }}"
-    cmd: make configs
-  when:
-    - not config_dir_check
+
+- name: configuration
+  template:
+    src: "{{ item }}"
+    dest: "/opt/janus/etc/janus/{{ item }}"
+  loop:
+    - janus.eventhandler.gelfevh.jcfg
+    - janus.eventhandler.sampleevh.jcfg
+    - janus.jcfg
+    - janus.plugin.audiobridge.jcfg
+    - janus.plugin.echotest.jcfg
+    - janus.plugin.nosip.jcfg
+    - janus.plugin.recordplay.jcfg
+    - janus.plugin.sip.jcfg
+    - janus.plugin.streaming.jcfg
+    - janus.plugin.textroom.jcfg
+    - janus.plugin.videocall.jcfg
+    - janus.plugin.videoroom.jcfg
+    - janus.plugin.voicemail.jcfg
+    - janus.transport.http.jcfg
+    - janus.transport.pfunix.jcfg
