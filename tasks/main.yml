@@ -23,23 +23,23 @@
 - name: clone
   git:
     repo: https://github.com/meetecho/janus-gateway
-    dest: "{{ janus_home }}"
+    dest: "{{ janus_src }}"
     update: false
     version: "{{ janus_version }}"
 - name: autogen
   command: ./autogen.sh
   args:
-    chdir: "{{ janus_home }}"
+    chdir: "{{ janus_src }}"
     creates: m4
 - name: configure
-  command: ./configure --prefix=/opt/janus
+  command: ./configure --prefix={{ janus_home }}
   args:
     creates: Makefile
-    chdir: "{{ janus_home }}"
+    chdir: "{{ janus_src }}"
 - name: build
   command: make
   args:
-    chdir: "{{ janus_home }}"
+    chdir: "{{ janus_src }}"
     creates: janus
 - name: janus directory
   file:
@@ -49,14 +49,14 @@
 - name: install
   command: make install
   args:
-    chdir: "{{ janus_home }}"
-    creates: /opt/janus/bin/janus
+    chdir: "{{ janus_src }}"
+    creates: "{{ janus_home }}/bin/janus"
 
 - name: configuration
   template:
     mode: 0644
     src: "{{ item }}.j2"
-    dest: "/opt/janus/etc/janus/{{ item }}"
+    dest: "{{ janus_home }}/etc/janus/{{ item }}"
   loop:
     - janus.eventhandler.gelfevh.jcfg
     - janus.eventhandler.sampleevh.jcfg

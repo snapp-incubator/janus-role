@@ -1,3 +1,4 @@
 ---
-janus_home: "/usr/local/src/janus"
+janus_src: "/usr/local/src/janus"
+janus_home: "/opt/janus"
 janus_version: "HEAD"
