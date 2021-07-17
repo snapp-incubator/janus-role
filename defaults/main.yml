@@ -1,3 +1,3 @@
 ---
-janus_home: "$HOME/janus"
+janus_home: "/opt/janus-src"
 janus_version: "HEAD"
