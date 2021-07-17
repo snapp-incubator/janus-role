@@ -49,12 +49,10 @@
   become: true
   file:
     path: /opt/janus
-    owner: "{{ lookup('env', 'USER') }}"
-    group: "{{ lookup('env', 'USER') }}"
     mode: 0755
     state: directory
 - name: install
-  become: false
+  become: true
   command: make install
   args:
     chdir: "{{ janus_home }}"
